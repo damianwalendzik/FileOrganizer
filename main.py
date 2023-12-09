@@ -1,16 +1,22 @@
-import os, re, shutil, logging
+import logging
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(message)s')
 filehandler = logging.FileHandler('organizer.log')
 filehandler.setFormatter(formatter)
+logging.root.setLevel(logging.DEBUG)
 
 streamhandler = logging.StreamHandler()
 streamhandler.setFormatter(formatter)
 
 logger.addHandler(streamhandler)
 logger.addHandler(filehandler)
+
+import os
+import re
+import shutil
+
 
 
 UserInput = input('enter the name of the user who has the target folder in its homedirectory\n')
@@ -20,36 +26,50 @@ OutputDir = f'/Users/{UserInput}/file-maintenance-scripts-output'
 Documents = f'/Users/{UserInput}/file-maintenance-scripts-output/Documents'
 Pictures = f'/Users/{UserInput}/file-maintenance-scripts-output/Pictures'
 Videos = f'/Users/{UserInput}/file-maintenance-scripts-output/Videos'
+Installers = f'/Users/{UserInput}/file-maintenance-scripts-output/Installers'
+Compressed = f'/Users/{UserInput}/file-maintenance-scripts-output/Compressed'
+
 if PathInput in CheckDir:
     PATH = f'/Users/{UserInput}/{PathInput}'
     PathList = os.listdir(PATH)
 else:
-    logging.warning('Wrong input, please try again.')
+    logger.warning('Wrong input, please try again.')
 
 if not os.path.exists(OutputDir):
     os.makedirs(OutputDir)
-    logging.info(f"Directory '{OutputDir}' created successfully.")
+    logger.info(f"Directory '{OutputDir}' created successfully.")
     os.makedirs(Videos)
-    logging.info(f"Directory '{Videos}' created successfully.")
+    logger.info(f"Directory '{Videos}' created successfully.")
     os.makedirs(Pictures)
-    logging.info(f"Directory '{Pictures}' created successfully.")
+    logger.info(f"Directory '{Pictures}' created successfully.")
     os.makedirs(Documents)
-    logging.info(f"Directory '{Documents}' created successfully.")
-
+    logger.info(f"Directory '{Documents}' created successfully.")
+    os.makedirs(Installers)
+    logger.info(f"Directory '{Installers}' created successfully.")
+    os.makedirs(Compressed)
+    logger.info(f"Directory '{Compressed}' created successfully.")
 
 if not os.path.exists(Videos):
     os.makedirs(Videos)
-    logging.info(f"Directory '{Videos}' created successfully.")
+    logger.info(f"Directory '{Videos}' created successfully.")
 
 
 if not os.path.exists(Pictures):
     os.makedirs(Pictures)
-    logging.info(f"Directory '{Pictures}' created successfully.")
+    logger.info(f"Directory '{Pictures}' created successfully.")
 
 
 if not os.path.exists(Documents):
     os.makedirs(Documents)
-    logging.info(f"Directory '{Documents}' created successfully.")
+    logger.info(f"Directory '{Documents}' created successfully.")
+
+if not os.path.exists(Installers):
+    os.makedirs(Installers)
+    logger.info(f"Directory '{Installers}' created successfully.")
+
+if not os.path.exists(Compressed):
+    os.makedirs(Compressed)
+    logger.info(f"Directory '{Compressed}' created successfully.")
 
 
 def sorting(regex_pattern, file):
@@ -60,19 +80,31 @@ def sorting(regex_pattern, file):
             SourcePath = f"{PATH}/{file}" 
             DestinationPath = f'{Documents}/{file}'
             shutil.move(SourcePath, DestinationPath)
-            logging.debug(f'{SourcePath} has been moved to: {DestinationPath}')
+            logger.debug(f'{SourcePath} has been moved to: {DestinationPath}')
 
         if regex_pattern == "\.png" or regex_pattern == "\.jpg":
             SourcePath = f"{PATH}/{file}" 
             DestinationPath = f'{Pictures}/{file}'
             shutil.move(SourcePath, DestinationPath)
-            logging.debug(f'{SourcePath} has been moved to: {DestinationPath}')
+            logger.debug(f'{SourcePath} has been moved to: {DestinationPath}')
 
         if regex_pattern == "\.mp4":
             SourcePath = f"{PATH}/{file}" 
             DestinationPath = f'{Videos}/{file}'
             shutil.move(SourcePath, DestinationPath)
-            logging.debug(f'{SourcePath} has been moved to: {DestinationPath}')
+            logger.debug(f'{SourcePath} has been moved to: {DestinationPath}')
+        
+        if regex_pattern == "\.exe" or regex_pattern == "\.dmg" or regex_pattern == "\.iso" or regex_pattern == "\.zip":
+            SourcePath = f"{PATH}/{file}" 
+            DestinationPath = f'{Installers}/{file}'
+            shutil.move(SourcePath, DestinationPath)
+            logger.debug(f'{SourcePath} has been moved to: {DestinationPath}')
+
+        if regex_pattern == "\.rar" or regex_pattern == "\.zip":
+            SourcePath = f"{PATH}/{file}" 
+            DestinationPath = f'{Compressed}/{file}'
+            shutil.move(SourcePath, DestinationPath)
+            logger.debug(f'{SourcePath} has been moved to: {DestinationPath}')
 
 
 for file in PathList:
@@ -81,6 +113,12 @@ for file in PathList:
     sorting(r'\.png', file)
     sorting(r'\.jpg', file)
     sorting(r'\.mp4', file)
+    sorting(r'\.exe', file)
+    sorting(r'\.dmg', file)
+    sorting(r'\.iso', file)
+    sorting(r'\.zip', file)
+    sorting(r'\.rar',file)
 
+filehandler.close()
 
     
