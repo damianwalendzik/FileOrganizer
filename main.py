@@ -16,6 +16,7 @@ logger.addHandler(filehandler)
 import os
 import re
 import shutil
+import tkinter
 
 
 
@@ -28,6 +29,7 @@ Pictures = f'/Users/{UserInput}/file-maintenance-scripts-output/Pictures'
 Videos = f'/Users/{UserInput}/file-maintenance-scripts-output/Videos'
 Installers = f'/Users/{UserInput}/file-maintenance-scripts-output/Installers'
 Compressed = f'/Users/{UserInput}/file-maintenance-scripts-output/Compressed'
+Frontend = f'/Users/{UserInput}/file-maintenance-scripts-output/Frontend'
 
 if PathInput in CheckDir:
     PATH = f'/Users/{UserInput}/{PathInput}'
@@ -48,6 +50,8 @@ if not os.path.exists(OutputDir):
     logger.info(f"Directory '{Installers}' created successfully.")
     os.makedirs(Compressed)
     logger.info(f"Directory '{Compressed}' created successfully.")
+    os.makedirs(Frontend)
+    logger.info(f"Directory '{Frontend}' created successfully.")
 
 if not os.path.exists(Videos):
     os.makedirs(Videos)
@@ -71,6 +75,9 @@ if not os.path.exists(Compressed):
     os.makedirs(Compressed)
     logger.info(f"Directory '{Compressed}' created successfully.")
 
+if not os.path.exists(Frontend):
+    os.makedirs(Frontend)
+    logger.info(f"Directory '{Frontend}' created successfully.")
 
 def sorting(regex_pattern, file):
 
@@ -105,6 +112,12 @@ def sorting(regex_pattern, file):
             DestinationPath = f'{Compressed}/{file}'
             shutil.move(SourcePath, DestinationPath)
             logger.debug(f'{SourcePath} has been moved to: {DestinationPath}')
+        
+        if regex_pattern == "\.html" or regex_pattern == "\.css":
+            SourcePath = f"{PATH}/{file}" 
+            DestinationPath = f'{Frontend}/{file}'
+            shutil.move(SourcePath, DestinationPath)
+            logger.debug(f'{SourcePath} has been moved to: {DestinationPath}')
 
 
 for file in PathList:
@@ -118,6 +131,7 @@ for file in PathList:
     sorting(r'\.iso', file)
     sorting(r'\.zip', file)
     sorting(r'\.rar',file)
+    sorting(r'\.html',file)
 
 filehandler.close()
 
