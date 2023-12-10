@@ -2,7 +2,7 @@ import typing
 from PyQt6.QtWidgets import *
 from PyQt6 import QtCore, uic
 from PyQt6.QtWidgets import QWidget
-
+from main import main_function
 class MyGUI(QMainWindow):
 
     def __init__(self):
